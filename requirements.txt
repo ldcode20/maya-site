@@ -1,0 +1,9 @@
+# Only what the website (src/api.py + frontend/) imports: no Streamlit,
+# Plotly, PyArrow or PyTorch. Ranges match requirements-core.txt.
+numpy>=2.0,<3
+pandas>=2.2,<3
+xgboost>=2.0,<4
+scikit-learn>=1.4,<2
+shap>=0.45,<1
+fastapi>=0.110,<1
+uvicorn>=0.29,<1

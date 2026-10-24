@@ -1,0 +1,45 @@
+{
+  "n_scams": 546,
+  "threshold": 0.10898278653621674,
+  "baseline_catch_rate": 0.9926739926739927,
+  "model_features": 27,
+  "attacks": [
+    {
+      "name": "split_2",
+      "catch_rate": 0.9963369963369964,
+      "drop_pts": -0.366300366300365,
+      "held_out_of_training": false
+    },
+    {
+      "name": "split_4",
+      "catch_rate": 0.9926739926739927,
+      "drop_pts": 0.0,
+      "held_out_of_training": false
+    },
+    {
+      "name": "split_10",
+      "catch_rate": 0.9578754578754579,
+      "drop_pts": 3.4798534798534786,
+      "held_out_of_training": true
+    },
+    {
+      "name": "extra_hop",
+      "catch_rate": 0.9963369963369964,
+      "drop_pts": -0.366300366300365,
+      "held_out_of_training": false
+    },
+    {
+      "name": "no_probes",
+      "catch_rate": 0.9926739926739927,
+      "drop_pts": 0.0,
+      "held_out_of_training": true
+    },
+    {
+      "name": "all",
+      "catch_rate": 0.9945054945054945,
+      "drop_pts": -0.1831501831501825,
+      "held_out_of_training": true
+    }
+  ],
+  "note": "Known, white-box attacks on synthetic test scams; caught = recall at the val 1%-FPR threshold, a split scam counts as caught if any part is."
+}

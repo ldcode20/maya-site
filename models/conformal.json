@@ -1,0 +1,26 @@
+{
+  "method": "mondrian-lac",
+  "score": "lac: 1 - p(true class), calibrated per class",
+  "alpha_fine": 0.01,
+  "alpha_scam": 0.1,
+  "qhat_fine": 0.0006278249784372747,
+  "qhat_scam": 0.003719031810760498,
+  "scam_threshold": 0.9962809681892395,
+  "calibration_split": "calib",
+  "calibration_rows": 378051,
+  "calibration_pos": 302,
+  "test": {
+    "coverage": 1.0,
+    "coverage_scam": 1.0,
+    "coverage_fine": 1.0,
+    "set_distribution": {
+      "{fine}": 702218,
+      "{scam}": 417,
+      "{fine, scam}": 3604
+    },
+    "unsure_share": 0.005103088331287284,
+    "scam_singleton_recall": 0.7637362637362637,
+    "scam_detection_rate": 1.0,
+    "avg_set_size": 1.0051030883312873
+  }
+}

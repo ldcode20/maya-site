@@ -1,0 +1,98 @@
+/* Maya design tokens, shared by the user app (/app) and the judges' demo (/demo).
+   Palette from the rupee itself: banknote intaglio ink, the ₹100 note's lavender,
+   and leaf / turmeric / sindoor for release / nudge / hold. Contrast-checked:
+   every text/fill pair used below is WCAG AA. */
+
+@font-face {
+  font-family: "Anek";
+  src: url("/static/fonts/anek-latin.woff2") format("woff2");
+  font-weight: 100 800; font-stretch: 75% 125%; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Anek";
+  src: url("/static/fonts/anek-latin-ext.woff2") format("woff2");
+  font-weight: 100 800; font-stretch: 75% 125%; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Anek";
+  src: url("/static/fonts/anek-devanagari.woff2") format("woff2");
+  font-weight: 100 800; font-stretch: 75% 125%; font-display: swap;
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC,
+    U+A830-A839, U+A8E0-A8FF;
+}
+
+:root {
+  /* colour */
+  --ink: #23264F;
+  --ink-soft: #3A3E6E;
+  --muted: #5B5E7E;          /* 5.7:1 on paper */
+  --paper: #F5F4FA;
+  --sheet: #FFFFFF;
+  --lavender: #C9C3EA;
+  --lavender-wash: #E8E5F6;
+  --rule: #D9D6EA;
+  --leaf: #2F7A56;
+  --leaf-ink: #256646;       /* leaf text on its tint */
+  --leaf-tint: #E3F0E8;
+  --turmeric: #C98A0B;       /* fill only, always with ink text */
+  --turmeric-ink: #8A5D00;   /* turmeric-coloured text */
+  --turmeric-tint: #FBEFD3;
+  --sindoor: #B42A21;
+  --sindoor-tint: #F8E1DE;
+  --focus: #4B55C9;
+
+  /* type: one family, the width axis carries the personality */
+  --font: "Anek", "Noto Sans", "Nirmala UI", system-ui, sans-serif;
+  --wide: 118%;
+  --normal: 100%;
+  --narrow: 82%;
+  --t-12: 0.75rem; --t-14: 0.875rem; --t-17: 1.0625rem; --t-21: 1.3125rem;
+  --t-28: 1.75rem; --t-40: 2.5rem; --t-64: 4rem;
+
+  /* shape: radius by role, not one radius everywhere */
+  --r-sheet: 20px;
+  --r-control: 12px;
+  --r-input: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+/* `hidden` must always win over component display rules (grid/flex). */
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-stretch: var(--normal);
+  font-size: var(--t-17);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+:lang(hi) body, body:lang(hi) { line-height: 1.65; }  /* Devanagari needs more room */
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.lang-switch { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; background: var(--sheet); }
+.lang-switch button {
+  border: 0; background: none; padding: 6px 14px; border-radius: 999px;
+  font-size: var(--t-14); color: var(--muted);
+}
+.lang-switch button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important;
+    transition-duration: 1ms !important; transition-delay: 0ms !important; }
+}

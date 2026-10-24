@@ -1,0 +1,13 @@
+# Render Blueprint: one free Docker web service for the Maya demo website.
+# render.com -> New -> Blueprint -> pick this repository -> Apply.
+services:
+  - type: web
+    name: maya
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /v1/health
+    autoDeploy: true
+    envVars:
+      - key: MAYA_TRUST_PROXY
+        value: "1"

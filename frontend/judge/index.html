@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maya · Demo</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2323264F'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' fill='%23C9C3EA' font-family='sans-serif'%3E%E2%82%B9%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/static/fonts/anek-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/tokens.css">
+  <link rel="stylesheet" href="judge.css">
+  <script src="/static/qrcode.js"></script>
+  <script type="module" src="judge.js"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="wordmark" href="/demo/">Maya</a>
+    <div class="pair-chip" id="pair-chip" hidden>
+      <div class="qr-mini" id="qr-mini" aria-hidden="true"></div>
+      <div><p class="chip-code" id="chip-code"></p><p class="chip-phones" id="chip-phones"></p></div>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="hi" aria-pressed="false" lang="hi">हिं</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Idle: invite phones to join -->
+    <section class="idle" id="idle" aria-labelledby="idle-title">
+      <div class="idle-copy">
+        <h1 id="idle-title" data-i18n="idle_title">Try Maya on your phone</h1>
+        <p class="lede" data-i18n="idle_body">Scan the code, pick a payment and tap Pay. Maya's decision appears here, with the reasons.</p>
+        <p class="phones" id="phones" role="status"></p>
+        <button type="button" class="text-button" id="presenter-toggle" data-i18n="presenter">Run the built-in scenarios here</button>
+      </div>
+      <figure class="join">
+        <div class="qr" id="qr" role="img" aria-label="QR code to open the Maya app"></div>
+        <figcaption>
+          <p class="code" id="code" aria-label="Code">······</p>
+          <p class="join-url"><span data-i18n="or_open">Or open this address and enter the code</span><br><strong id="join-url"></strong></p>
+          <button type="button" class="text-button" id="new-code" data-i18n="new_code">New code</button>
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- Built-in scenarios (presenter fallback, no phone needed) -->
+    <nav class="presenter" id="presenter" aria-label="Built-in scenarios" hidden></nav>
+
+    <!-- Live: the latest payment and why Maya decided -->
+    <section class="board" id="board" aria-live="polite" hidden>
+      <div class="pay-head">
+        <p class="who" id="who"></p>
+        <p class="big-amount" id="big-amount"></p>
+        <p class="story" id="story"></p>
+      </div>
+
+      <div class="gate" id="gate" data-state="waiting">
+        <div class="groups">
+          <div class="group" data-group="history"><h2 data-i18n="group_history">Payment history</h2><p class="state"></p><ul class="facts"></ul></div>
+          <div class="group" data-group="receiving"><h2 data-i18n="group_receiving">Receiving account</h2><p class="state"></p><ul class="facts"></ul></div>
+          <div class="group soft" data-group="phone"><h2 data-i18n="group_phone">Phone signals</h2><p class="state"></p><ul class="facts"></ul></div>
+        </div>
+        <div class="latch" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div class="verdict" id="verdict">
+        <p class="decision"><span class="visually-hidden" data-i18n="decision">Decision</span><strong id="decision"></strong> <span id="analyst"></span></p>
+        <p class="rule" id="rule-line"></p>
+        <p class="model" id="model-line"></p>
+      </div>
+    </section>
+
+    <section class="recent" id="recent" aria-labelledby="recent-title" hidden>
+      <h2 id="recent-title" data-i18n="recent">Recent payments</h2>
+      <ol id="recent-list"></ol>
+    </section>
+
+    <section class="path" id="path" aria-labelledby="path-title" hidden>
+      <h2 id="path-title" data-i18n="money_path">Where the money would go</h2>
+      <ol id="path-list"></ol>
+    </section>
+
+    <section class="inspect">
+      <div class="tabs" role="tablist" aria-label="Inspect the decision">
+        <button role="tab" id="tab-evidence" aria-controls="panel-evidence" aria-selected="true" data-i18n="tab_evidence">Evidence</button>
+        <button role="tab" id="tab-robust" aria-controls="panel-robust" aria-selected="false" tabindex="-1" data-i18n="tab_robust">Robustness</button>
+        <button role="tab" id="tab-model" aria-controls="panel-model" aria-selected="false" tabindex="-1" data-i18n="tab_model">Model card</button>
+        <button role="tab" id="tab-try" aria-controls="panel-try" aria-selected="false" tabindex="-1" data-i18n="tab_try">Try it</button>
+      </div>
+      <div class="panel" role="tabpanel" id="panel-evidence" aria-labelledby="tab-evidence"></div>
+      <div class="panel" role="tabpanel" id="panel-robust" aria-labelledby="tab-robust" hidden></div>
+      <div class="panel" role="tabpanel" id="panel-model" aria-labelledby="tab-model" hidden></div>
+      <div class="panel" role="tabpanel" id="panel-try" aria-labelledby="tab-try" hidden>
+        <form id="try-form" class="try">
+          <div class="sliders" id="sliders"></div>
+          <fieldset class="toggles">
+            <label><input type="checkbox" name="is_screen_shared"> <span data-i18n="phone_screen">Screen sharing is on</span></label>
+            <label><input type="checkbox" name="is_voice_active"> <span data-i18n="phone_voice">You're on a call</span></label>
+            <label><input type="checkbox" name="chat_demand"> <span data-i18n="phone_chat">Chat is asking for payment</span></label>
+          </fieldset>
+          <button class="run" type="submit" data-i18n="run">Score this payment</button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <p class="notice" id="notice" role="status" hidden></p>
+</body>
+</html>

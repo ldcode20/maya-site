@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Pay · Maya</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2323264F'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' fill='%23C9C3EA' font-family='sans-serif'%3E%E2%82%B9%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/static/fonts/anek-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/tokens.css">
+  <link rel="stylesheet" href="user.css">
+  <script type="module" src="user.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="appbar">
+      <div>
+        <h1 class="appname" data-i18n="app_title">Pay</h1>
+        <p class="live" id="live" hidden></p>
+      </div>
+      <button type="button" class="icon-button" id="open-settings" aria-haspopup="dialog">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg>
+        <span class="visually-hidden" data-i18n="settings">Settings</span>
+      </button>
+    </header>
+
+    <!-- What the phone itself knows during this payment (soft signals). -->
+    <ul class="phone-status" id="phone-status" aria-label="Phone status" hidden></ul>
+
+    <main id="screen" tabindex="-1">
+      <p class="loading" role="status">…</p>
+    </main>
+
+    <p class="protected"><svg aria-hidden="true" viewBox="0 0 16 16" width="13" height="13"><path d="M8 1.5 2.5 3.6v4.1c0 3.2 2.3 5.9 5.5 6.8 3.2-.9 5.5-3.6 5.5-6.8V3.6Z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="protected">Protected by Maya</span></p>
+  </div>
+
+  <dialog id="settings" aria-labelledby="settings-title">
+    <form method="dialog" class="sheet-head">
+      <h2 id="settings-title" data-i18n="settings">Settings</h2>
+      <button class="text-button" data-i18n="done">Done</button>
+    </form>
+
+    <section class="sheet-section" aria-labelledby="lang-title">
+      <h3 id="lang-title" data-i18n="language">Language</h3>
+      <div class="segmented" role="group" aria-labelledby="lang-title">
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="hi" aria-pressed="false" lang="hi">हिंदी</button>
+      </div>
+    </section>
+
+    <section class="sheet-section" aria-labelledby="connect-title">
+      <h3 id="connect-title" data-i18n="connect_title">Show payments on a demo screen</h3>
+      <form id="connect-form" class="connect" autocomplete="off">
+        <label class="visually-hidden" for="code-input" data-i18n="connect_hint">Enter the code shown on the demo screen.</label>
+        <input id="code-input" name="code" inputmode="text" autocapitalize="characters" maxlength="9" placeholder="K7P2QX" spellcheck="false">
+        <button type="submit" class="pill small" data-i18n="connect">Connect</button>
+      </form>
+      <p class="hint" id="connect-status" role="status" data-i18n="connect_hint">Enter the code shown on the demo screen.</p>
+      <button type="button" class="text-button" id="disconnect" hidden data-i18n="disconnect">Disconnect</button>
+    </section>
+
+    <section class="sheet-section" aria-labelledby="scen-title">
+      <h3 id="scen-title" data-i18n="try_scenario">Try a scenario</h3>
+      <button type="button" class="own-payment" id="open-custom"><strong data-i18n="custom_entry">Your own payment</strong><span aria-hidden="true">+</span></button>
+      <ul class="scenario-list" id="scenario-list"></ul>
+    </section>
+  </dialog>
+
+  <dialog id="custom" aria-labelledby="custom-title">
+    <form id="custom-form" novalidate autocomplete="off">
+      <div class="sheet-head">
+        <h2 id="custom-title" data-i18n="custom_title">Your own payment</h2>
+        <button type="button" class="text-button" id="custom-close" data-i18n="close">Close</button>
+      </div>
+      <p class="hint" data-i18n="custom_intro">Enter a payment and describe the situation. Maya checks it like a real one.</p>
+
+      <fieldset class="sheet-section">
+        <legend data-i18n="sec_payment">Payment</legend>
+        <label class="field"><span data-i18n="f_payee">Paying</span><input name="payee" maxlength="60" required></label>
+        <label class="field"><span data-i18n="f_upi">UPI ID</span><input name="upi" maxlength="60" inputmode="email" spellcheck="false"></label>
+        <label class="field"><span data-i18n="f_amount">Amount (₹)</span><input name="amount" type="number" min="1" max="10000000" step="1" inputmode="numeric" required></label>
+        <label class="field"><span data-i18n="f_note">Note (optional)</span><input name="note" maxlength="60"></label>
+      </fieldset>
+
+      <fieldset class="sheet-section">
+        <legend data-i18n="sec_history">You and this person</legend>
+        <label class="field"><span data-i18n="f_usual">Your usual payment size (₹)</span><input name="usual" type="number" min="1" max="10000000" step="1" inputmode="numeric"></label>
+        <label class="switch"><input type="checkbox" name="firstTime"><span data-i18n="f_first">First time paying this person</span></label>
+        <label class="field"><span data-i18n="f_earlier">Earlier payments to them in the last 24 hours</span><input name="earlierToday" type="number" min="0" max="20" step="1" inputmode="numeric"></label>
+        <label class="field"><span data-i18n="f_probes">Tiny ₹1–10 test payments to them in the last hour</span><input name="probes" type="number" min="0" max="10" step="1" inputmode="numeric"></label>
+        <label class="switch"><input type="checkbox" name="manyNew"><span data-i18n="f_many">You've paid many new people this week</span></label>
+      </fieldset>
+
+      <fieldset class="sheet-section">
+        <legend data-i18n="sec_recipient">About the recipient</legend>
+        <label class="field"><span data-i18n="f_link">Link to an account reported for fraud</span>
+          <select name="link">
+            <option value="3" data-i18n="link_3">None known</option>
+            <option value="2" data-i18n="link_2">Two steps away</option>
+            <option value="1" data-i18n="link_1">One step away</option>
+            <option value="0" data-i18n="link_0">The recipient was reported</option>
+          </select></label>
+        <label class="switch"><input type="checkbox" name="forwards"><span data-i18n="f_forwards">Passes money on as soon as it arrives</span></label>
+        <label class="switch"><input type="checkbox" name="muleFlag"><span data-i18n="f_mule">Your bank's mule check flagged them</span></label>
+      </fieldset>
+
+      <fieldset class="sheet-section">
+        <legend data-i18n="sec_phone">On your phone right now</legend>
+        <label class="switch"><input type="checkbox" name="screen"><span data-i18n="f_screen">Screen sharing is on</span></label>
+        <label class="switch"><input type="checkbox" name="call"><span data-i18n="f_call">On a call</span></label>
+        <label class="switch"><input type="checkbox" name="pressure"><span data-i18n="f_pressure">Someone in a chat is demanding this payment</span></label>
+      </fieldset>
+
+      <p class="hint error" id="custom-error" role="alert" hidden></p>
+      <button type="submit" class="pill" data-i18n="use_payment">Use this payment</button>
+    </form>
+  </dialog>
+</body>
+</html>
